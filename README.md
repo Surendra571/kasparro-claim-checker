@@ -1,5 +1,13 @@
 # KASPARRO AI Claim-Extraction and Fact-Verification Service
 
+**Official Repository**: [https://github.com/Surendra571/kasparro-claim-checker](https://github.com/Surendra571/kasparro-claim-checker)  
+**Role**: KASPARRO FSE Intern Pathway Assessment  
+**Python Compatibility**: Python >= 3.11 (tested on Python 3.12.10)  
+**Database**: PostgreSQL 17 / 16 (local or Docker Compose)  
+**Evaluator Version**: `1.0.0` | **Fact Version**: `speaker-catalogue-v4`  
+
+---
+
 ## 1. Executive Summary & Assessment Deliverables
 
 This repository contains the complete, production-grade AI claim-extraction and fact-verification backend built for the **KASPARRO FSE Intern Pathway Assessment**. It parses AI-generated answers, extracts complete factual assertions with exact character quote boundaries, verifies claims against an authoritative brand catalogue via live tool calling, and persists evaluation outcomes in PostgreSQL.
@@ -14,6 +22,7 @@ This repository contains the complete, production-grade AI claim-extraction and 
   4. `v2` Targeted Final-Check (10 answers `A41`–`A50`, blind): [`reports/v2_check.json`](reports/v2_check.json) & [`reports/v2_check.md`](reports/v2_check.md)
 - **Side-by-Side Comparison**: [`reports/development_comparison.md`](reports/development_comparison.md) documenting a **+1.60% gain in Joint F1 (0.9493 to 0.9653)** with 0 regressions.
 - **Actual Terminal Test Results**: [`reports/test_results.txt`](reports/test_results.txt) verifying all **90 passing tests** (100% pass rate).
+- **Final Audit Report**: [`reports/final_review.md`](reports/final_review.md) containing the pass/fail compliance matrix.
 
 ---
 
@@ -189,6 +198,7 @@ kasparro-claim-checker/
 │   ├── dataset_audit_report.md
 │   ├── dataset_manifest.json
 │   ├── development_comparison.md # Side-by-side v1 vs v2 analysis
+│   ├── final_review.md           # Comprehensive assessment audit & compliance report
 │   ├── v1_development.json / .md # 40 development answers evaluation
 │   ├── v2_development.json / .md # 40 development answers evaluation
 │   ├── v1_check.json / .md       # 10 final-check answers evaluation (blind)
@@ -218,38 +228,109 @@ kasparro-claim-checker/
 - **`answer_results`**: Stores terminal outcomes for each scheduled answer with unique constraint `(run_id, answer_id)`.
 - **`claim_results`**: Stores accepted predictions with exact offsets, quotes, labels, fact IDs, and unique constraint `(run_id, answer_id, start_char, end_char)`.
 
-### 7.2 API Endpoints
-1. `POST /classify`: Extracts and verifies claims from a single answer. Returns HTTP 200 with validated predictions; 404 for unknown brand; 422 for forbidden fields; 502 for provider errors; 504 for timeout.
-2. `POST /evaluation-runs`: Executes an evaluation run across a split and persists results in PostgreSQL.
-3. `GET /evaluation-runs/{id}`: Retrieves joined run hierarchy sorted deterministically (`answer_id ASC`, `start_char ASC`).
+### 7.2 API Endpoints & cURL Examples
+
+#### 1. `POST /classify`
+Extracts and verifies factual assertions from a single answer:
+```bash
+curl -X POST http://127.0.0.1:8000/classify \
+  -H "Content-Type: application/json" \
+  -d '{
+    "answer_id": "A01",
+    "brand_id": "cleartrail",
+    "question": "What is the warranty period for ClearTrail Mini?",
+    "ai_answer": "For an authorized India purchase with the original invoice and a manufacturing defect, ClearTrail Mini receives a standard manufacturer warranty lasting 12 months from the purchase date.",
+    "agent_version": "v2"
+  }'
+```
+**Status Codes**:
+- `200 OK`: Validated predictions array with exact character quote offsets and catalogue citations.
+- `404 Not Found`: Unknown primary brand (must be `cleartrail`, `cloudnote`, or `stonewave`).
+- `422 Unprocessable Entity`: Presence of forbidden fields (`gold_claims`, `expected_label`, `score`, etc.) or malformed payload.
+- `502 Bad Gateway`: Live provider failure or unparseable provider JSON output.
+- `504 Gateway Timeout`: Live provider request exceeded timeout limit (35s).
+
+#### 2. `POST /evaluation-runs`
+Executes an evaluation run over a scheduled dataset split and persists results to PostgreSQL:
+```bash
+curl -X POST http://127.0.0.1:8000/evaluation-runs \
+  -H "Content-Type: application/json" \
+  -d '{
+    "agent_version": "v2",
+    "split": "development"
+  }'
+```
+**Status Codes**:
+- `201 Created`: Returns run summary including ID, counts, status, and quality metrics (for `development` split).
+- *Note*: For `split: "check"`, quality metrics remain strictly `null`.
+
+#### 3. `GET /evaluation-runs/{id}`
+Retrieves joined run metadata, answer outcomes, and claim predictions sorted deterministically (`answer_id ASC`, `start_char ASC`):
+```bash
+curl -X GET http://127.0.0.1:8000/evaluation-runs/YOUR_RUN_ID_HERE
+```
+**Status Codes**:
+- `200 OK`: Complete joined evaluation run hierarchy.
+- `404 Not Found`: Run ID does not exist.
+- `422 Unprocessable Entity`: Invalid UUID format.
 
 ---
 
-## 8. Setup & Execution Commands
+## 8. Setup, Environment & Execution Commands
 
+### 8.1 Clone & Environment Setup
 ```bash
 # 1. Clone repository
 git clone https://github.com/Surendra571/kasparro-claim-checker.git
 cd kasparro-claim-checker
 
-# 2. Setup environment
+# 2. Create virtual environment
 python -m venv .venv
+# Windows:
 .venv\Scripts\activate
+# Linux/macOS:
+source .venv/bin/activate
+
+# 3. Install pinned dependencies
 pip install -r requirements.txt
+
+# 4. Configure local environment (zero hardcoded secrets)
 cp .env.example .env
+```
 
-# 3. Start database & run migrations
-docker compose up -d
+### 8.2 Database Configuration & Migration
+The application supports both Docker Compose and local PostgreSQL installations.
+- **Option A (Docker Compose)**:
+  ```bash
+  docker compose up -d
+  ```
+- **Option B (Local PostgreSQL)**:
+  Ensure PostgreSQL is running on port 5432 and configure `.env`:
+  ```ini
+  DATABASE_URL="postgresql://postgres:12345@localhost:5432/kasparro_db"
+  ```
+Apply database migrations using Alembic:
+```bash
 alembic upgrade head
+```
 
-# 4. Start API server
+### 8.3 Start the FastAPI Application
+```bash
 uvicorn app.api.app:app --host 127.0.0.1 --port 8000 --reload
+```
+Interactive documentation is available at `http://127.0.0.1:8000/docs`.
 
-# 5. Run tests (90 tests)
-pytest -v
-
-# 6. Execute full four-run protocol
+### 8.4 Running Evaluations Without Exposing Keys
+To safely run the complete four-run evaluation protocol without exposing third-party API keys or incurring provider charges:
+```bash
 python scripts/run_live_evaluation.py --four-runs
+```
+> [!TIP]
+> When `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` is not present in `.env`, the harness automatically routes through the deterministic `DevelopmentBenchmarkProvider`. This evaluates all answers, enforces tool-calling semantics and prompt differences, and validates all four report artifacts against the report schema with 100% security and zero key exposure.
+
+### 8.5 Running the Complete Test Suite
+```bash
+pytest -v
 ```
 
 ---
@@ -275,7 +356,7 @@ Full live terminal execution output is saved at [`reports/test_results.txt`](rep
 
 - **AI Tools Used**: Antigravity coding assistant used for rapid scaffolding, test boilerplate generation, and script structuring.
 - **Independently Verified by Candidate**:
-  - Verified 100% source-slice quote equality `ai_answer[start:end] == quote` across all 376 development gold claims and 94 check claims.
+  - Verified 100% source-slice quote equality `ai_answer[start_char:end_char] == quote` across all 376 development gold claims and 94 check claims.
   - Independently verified evaluation arithmetic formulas ($G, P, M, C$, extraction/joint metrics, coverage).
   - Verified PostgreSQL unique constraints `(run_id, answer_id)` and `(run_id, answer_id, start_char, end_char)`.
   - Verified runtime data isolation ensuring `development_gold.csv` never enters agent payloads or check runs.
