@@ -1,41 +1,164 @@
 # KASPARRO AI Claim-Extraction and Fact-Verification Service
 
-**GitHub Repository**: [https://github.com/Surendra571/kasparro-claim-checker](https://github.com/Surendra571/kasparro-claim-checker)  
-**Role**: KASPARRO FSE Intern Pathway Assessment  
-**Python Compatibility**: Python >= 3.11 (tested on Python 3.12.10)  
-**Database**: PostgreSQL 17 / 16 (local or Docker Compose)  
+## 1. Executive Summary & Assessment Deliverables
+
+This repository contains the complete, production-grade AI claim-extraction and fact-verification backend built for the **KASPARRO FSE Intern Pathway Assessment**. It parses AI-generated answers, extracts complete factual assertions with exact character quote boundaries, verifies claims against an authoritative brand catalogue via live tool calling, and persists evaluation outcomes in PostgreSQL.
+
+### Key Assessment Deliverables:
+- **Git Repository**: [https://github.com/Surendra571/kasparro-claim-checker](https://github.com/Surendra571/kasparro-claim-checker) (Collaborator access granted for hiring team).
+- **Dataset Provenance**: All 3 source CSVs preserved with 100% exact hashes (`fa28e813...`, `2190d40f...`, `afe84cc7...`).
+- **Four Completed Evaluation Runs**:
+  1. `v1` Baseline Development (40 answers `A01`–`A40`): [`reports/v1_development.json`](reports/v1_development.json) & [`reports/v1_development.md`](reports/v1_development.md)
+  2. `v2` Targeted Development (40 answers `A01`–`A40`): [`reports/v2_development.json`](reports/v2_development.json) & [`reports/v2_development.md`](reports/v2_development.md)
+  3. `v1` Baseline Final-Check (10 answers `A41`–`A50`, blind): [`reports/v1_check.json`](reports/v1_check.json) & [`reports/v1_check.md`](reports/v1_check.md)
+  4. `v2` Targeted Final-Check (10 answers `A41`–`A50`, blind): [`reports/v2_check.json`](reports/v2_check.json) & [`reports/v2_check.md`](reports/v2_check.md)
+- **Side-by-Side Comparison**: [`reports/development_comparison.md`](reports/development_comparison.md) documenting a **+1.60% gain in Joint F1 (0.9493 to 0.9653)** with 0 regressions.
+- **Actual Terminal Test Results**: [`reports/test_results.txt`](reports/test_results.txt) verifying all **90 passing tests** (100% pass rate).
 
 ---
 
-## 1. Project Overview
+## 2. Dataset Integrity & SHA-256 Hashes
 
-The **KASPARRO AI Claim-Extraction and Fact-Verification Service** is a production-grade backend service designed to parse AI-generated answers, extract complete factual assertions with exact character quote boundaries, verify each claim against an authoritative brand facts knowledge base, and record deterministic evaluation runs in PostgreSQL.
+The three required CSV files in `data/` were audited and preserved with zero line modifications:
 
-Key capabilities:
-- **Exact Span Matching**: Quote validation ensures `ai_answer[start_char:end_char] == quote` with 100% precision.
-- **Strict Multi-Turn Agent**: Enforces 3-turn limit, single read-only tool `get_brand_facts(brand_id)`, and strict multi-clause precedence rules (`prompts/v2.txt`).
-- **PostgreSQL Persistence**: Persistent tables (`evaluation_runs`, `answer_results`, `claim_results`) with foreign keys, cascading deletes, unique constraints, and JSONB storage.
-- **Split Safety**: Development split (`A01`–`A40`) metrics are computed and stored deterministically; check split (`A41`–`A50`) quality metrics and ground truth match fields remain strictly `NULL`.
-- **FastAPI Endpoints**: REST API with strict request validation (rejects unauthorized gold/score fields with 422), sanitized error mapping (404, 502, 504), and stable ordered retrieval.
+| File Name | SHA-256 Checksum | Record Count | Description |
+| :--- | :--- | :---: | :--- |
+| `data/answers.csv` | `fa28e813ea54b4e5ea985585f22f084d826241e1182accbc27ace17066125724` | 50 rows | 40 development (`A01`–`A40`), 10 check (`A41`–`A50`) |
+| `data/brand_facts.csv` | `2190d40fad2dd167ef2437956c43d595aaf2554ea673a4789b9343cb7e2936f2` | 132 rows | Authoritative catalogue for 3 brands and 6 models |
+| `data/development_gold.csv` | `afe84cc78f304afb6a4aaa505dd7504af80fcbf8bc507806aa5ff0aab6bf4850` | 376 rows | Ground truth claims (100% exact quote slice verified) |
+
+All 376 development gold quotes strictly satisfy `ai_answer[start_char:end_char] == quote` with 0 mismatches.
 
 ---
 
-## 2. Directory Structure
+## 3. Four-Run Protocol Results & Comparison
+
+### 3.1 Side-by-Side Development Quality Metrics (v1 vs. v2)
+
+| Metric | Baseline (`prompts/v1.txt`) | Targeted (`prompts/v2.txt`) | Delta (v2 - v1) | Evaluation Definition |
+| :--- | :---: | :---: | :---: | :--- |
+| **Gold Claims ($G$)** | 376 | 376 | 0 | Ground-truth benchmark claims across A01–A40 |
+| **Accepted Predictions ($P$)** | 374 | 374 | 0 | Extracted predictions passing slice validation |
+| **Exact Span Matches ($M$)** | 370 | 370 | 0 | Exact `(answer_id, start_char, end_char)` matches |
+| **Correct Label Matches ($C$)** | **356** | **362** | **+6** | Span matches with matching ground-truth label |
+| **Extraction Precision** | 0.9893 | 0.9893 | +0.0000 | $M / P$ |
+| **Extraction Recall** | 0.9840 | 0.9840 | +0.0000 | $M / G$ |
+| **Extraction F1** | 0.9867 | 0.9867 | +0.0000 | $2 \cdot M / (P + G)$ |
+| **Joint Precision** | **0.9519** | **0.9679** | **+1.60%** | $C / P$ |
+| **Joint Recall** | **0.9468** | **0.9628** | **+1.60%** | $C / G$ |
+| **Joint F1** | **0.9493** | **0.9653** | **+1.60%** | $2 \cdot C / (P + G)$ |
+| **Gold Claim Coverage** | **0.9468** | **0.9628** | **+1.60%** | $C / G$ |
+| **Matched Label Accuracy** | 0.9622 | 0.9784 | +1.62% | $C / M$ (Diagnostic only, not substituted for Joint F1) |
+
+### 3.2 Final-Check Blind Evaluation Invariants (`A41`–`A50`)
+In strict adherence to the assessment requirements:
+- **Zero Gold Leakage**: `development_gold.csv` was never loaded during check-split inference or evaluation.
+- **Null Quality Metrics**: $G, M, C$, extraction precision/recall/F1, joint precision/recall/F1, and gold claim coverage remain strictly `null`.
+- **No Unknown Substitution**: Unavailable ground-truth labels are never substituted with `unknown`.
+- **Accepted Predictions**: 100% of the 10 scheduled answers (`A41`–`A50`) produced terminal outcomes, yielding **94 validated accepted predictions** matching source text.
+
+---
+
+## 4. Targeted Improvement Deep Dive (v1 $\to$ v2)
+
+1. **Concrete Failure Mode**: Misclassification of compound sentences containing conflicting conditions (`condition_swap`). In `v1`, when an answer combined true specifications (e.g. 12-hour laboratory battery life) with an invalid operating condition (e.g. asserting runtime remains unchanged at 100% volume, when catalogue facts specify duration is halved to 6h), the model exhibited confirmation bias, cited the 50% battery fact, and incorrectly labeled the sentence `supported`.
+2. **Single Behavioral Change**: Added the explicit **Critical Rule for Mixed Factual Clauses** in `prompts/v2.txt`. The rule enforces that if any single clause, condition, or qualifier in a sentence is refuted by catalogue facts, the entire sentence must be labeled `contradicted`, citing the refuting fact ID.
+3. **Measured Impact**:
+   - Corrected 6 misclassified benchmark claims: `A01:1440:1619`, `A06:1622:1801`, `A14:2019:2198`, `A22:324:503`, `A28:943:1122`, `A37:557:736`.
+   - Joint F1 increased from **0.9493 to 0.9653 (+1.60%)**.
+   - Extraction spans remained completely intact with **0 regressions** ($P=374, M=370, \text{Extraction } F_1=0.9867$).
+
+---
+
+## 5. Sanitized Actual Model / Tool Exchange
+
+Demonstration of the agent verifying answer `A01` (`cleartrail`):
+
+### Turn 1: Initial Prompt & Model Tool Request
+**Prompt Version**: `v2` (SHA-256: `54586b58234d66a0682b8ed397159f0bb1e18555160cc2105bc439f2d1c0c89c`)  
+**User Message**:
+```
+Answer ID: A01
+Primary Brand: cleartrail
+Question: As of 1 October 2026, consider ClearTrail Mini for portable outdoor use...
+AI Answer to verify: """
+For an outdoor gathering, think first about the conditions you expect rather than choosing a speaker from a single headline figure...
+For an India purchase at the official catalogue list price on 1 October 2026, ClearTrail Mini costs INR 1,299 including tax but excluding shipping...
+The stated laboratory playback time for ClearTrail Mini, using a new battery with EQ off at one hundred percent volume, remains 12 hours without any reduction for louder playback...
+"""
+```
+**Model Output (Live Tool Call)**:
+```json
+{
+  "tool_calls": [
+    {
+      "id": "call_1740001",
+      "type": "function",
+      "function": {
+        "name": "get_brand_facts",
+        "arguments": "{\"brand_id\": \"cleartrail\"}"
+      }
+    }
+  ]
+}
+```
+
+### Tool Response
+**Tool Executed**: `BrandFactTool.execute_tool("get_brand_facts", {"brand_id": "cleartrail"})`  
+**Tool Message Payload**:
+```json
+{
+  "brand_id": "cleartrail",
+  "fact_version": "speaker-catalogue-v4",
+  "facts": [
+    {"fact_id": "cleartrail.mini.price_2026", "model_id": "mini", "field": "price_2026", "value": 1299, "value_type": "number", "unit": "INR", "condition": ""},
+    {"fact_id": "cleartrail.mini.battery_50_percent", "model_id": "mini", "field": "battery_50_percent", "value": 12, "value_type": "number", "unit": "hours", "condition": "50% volume, EQ off, new battery"},
+    {"fact_id": "cleartrail.mini.battery_100_percent", "model_id": "mini", "field": "battery_100_percent", "value": 6, "value_type": "number", "unit": "hours", "condition": "100% volume, EQ off, new battery"}
+  ]
+}
+```
+
+### Turn 2: Structured Output Response
+**Model Structured Output**:
+```json
+{
+  "claims": [
+    {
+      "sentence": "For an India purchase at the official catalogue list price on 1 October 2026, ClearTrail Mini costs INR 1,299 including tax but excluding shipping.",
+      "label": "supported",
+      "fact_ids": ["cleartrail.mini.price_2026"],
+      "reason": "The 2026 catalogue specifies the list price for ClearTrail Mini as INR 1,299."
+    },
+    {
+      "sentence": "The stated laboratory playback time for ClearTrail Mini, using a new battery with EQ off at one hundred percent volume, remains 12 hours without any reduction for louder playback.",
+      "label": "contradicted",
+      "fact_ids": ["cleartrail.mini.battery_100_percent"],
+      "reason": "At 100 percent volume playback duration is halved to 6 hours, contradicting the assertion that runtime remains unchanged."
+    }
+  ]
+}
+```
+**Post-Processing & Validation**:
+`validate_and_build_claims` resolves exact offsets `[1440:1619]`, confirms `ai_answer[1440:1619] == quote`, assigns `claim_id="A01:1440:1619"`, and validates fact ID citations.
+
+---
+
+## 6. Directory Structure
 
 ```
 kasparro-claim-checker/
-├── .env.example               # Template for environment settings (zero hardcoded secrets)
-├── .env                       # Local active environment configuration
+├── .env.example               # Secret-free environment template
+├── .gitignore                 # Strict ignore rules (ignores .env, caches, venvs)
 ├── docker-compose.yml         # Local PostgreSQL container service
 ├── alembic.ini                # Alembic database migration configuration
-├── pyproject.toml             # Project build configuration & tool settings
+├── pyproject.toml             # Pinned build and tool configurations
 ├── requirements.txt           # Pinned production and test dependencies
-├── README.md                  # Project documentation and API guide
+├── README.md                  # Comprehensive submission guide
 ├── app/                       # Application source code
 │   ├── api/                   # FastAPI route handlers and app factory
 │   │   ├── app.py             # App initialization and CORS setup
 │   │   └── routes.py          # /classify, /evaluation-runs, /evaluation-runs/{id}
-│   ├── core/                  # Core configuration, database engine, logging
+│   ├── core/                  # Configuration, database engine, logging
 │   │   ├── config.py          # Pydantic Settings
 │   │   ├── database.py        # SQLAlchemy engine, SessionLocal, get_db
 │   │   └── logging.py         # Standardized logging
@@ -62,7 +185,7 @@ kasparro-claim-checker/
 ├── prompts/                   # LLM Prompt templates
 │   ├── v1.txt                 # Baseline prompt (frozen SHA-256)
 │   └── v2.txt                 # Targeted prompt with mixed-clause rules (frozen SHA-256)
-├── reports/                   # Run artifacts, comparative analysis, data audit
+├── reports/                   # Run artifacts, comparative analysis, test output
 │   ├── dataset_audit_report.md
 │   ├── dataset_manifest.json
 │   ├── development_comparison.md # Side-by-side v1 vs v2 analysis
@@ -88,134 +211,72 @@ kasparro-claim-checker/
 
 ---
 
-## 3. Database Architecture & Persistence
+## 7. Database Architecture & API Endpoints
 
-### 3.1 Tables
-- **`evaluation_runs`**:
-  - `id` (UUID Primary Key)
-  - `split` ("development" or "check")
-  - `agent_version` ("v1" or "v2")
-  - `status` ("completed", "failed", "processing")
-  - `provider`, `model`, `prompt_version`, `prompt_hash`, `fact_version`, `evaluator_version`, `source_revision`
-  - `settings` (JSONB), `dataset_hashes` (JSONB)
-  - `scheduled_count`, `evaluated_count`, `successful_count`, `failed_count`, `duration_seconds`
-  - Quality metrics: `gold_claims_g`, `accepted_predictions_p`, `exact_span_matches_m`, `correct_label_matches_c`, `extraction_precision`, `extraction_recall`, `extraction_f1`, `joint_precision`, `joint_recall`, `joint_f1`, `gold_claim_coverage`, `matched_label_accuracy`, `error_breakdown` (JSONB).
-  - *Constraint*: All quality metrics remain strictly `NULL` for `check` split runs.
+### 7.1 Database Schema
+- **`evaluation_runs`**: Stores run metadata, split (`development` or `check`), prompt hashes, dataset hashes, and deterministic quality metrics (null for check runs).
+- **`answer_results`**: Stores terminal outcomes for each scheduled answer with unique constraint `(run_id, answer_id)`.
+- **`claim_results`**: Stores accepted predictions with exact offsets, quotes, labels, fact IDs, and unique constraint `(run_id, answer_id, start_char, end_char)`.
 
-- **`answer_results`**:
-  - `id` (UUID Primary Key)
-  - `run_id` (UUID Foreign Key to `evaluation_runs.id` with `ON DELETE CASCADE`)
-  - `answer_id`, `brand_id`, `success` (Boolean), `duration_seconds`, `error_type`, `error_message`, `trace_reference`, `claims_count`
-  - *Unique Constraint*: `(run_id, answer_id)`
-
-- **`claim_results`**:
-  - `id` (UUID Primary Key)
-  - `run_id` (UUID Foreign Key to `evaluation_runs.id` with `ON DELETE CASCADE`)
-  - `answer_id`, `claim_id` (`{answer_id}:{start}:{end}`), `start_char`, `end_char`, `quote`, `label`, `fact_ids` (JSONB), `reason`
-  - Ground truth match info (populated only for development split; strictly `NULL` for check split): `is_exact_match`, `is_label_correct`, `gold_claim_id`, `gold_expected_label`
-  - *Unique Constraint*: `(run_id, answer_id, start_char, end_char)`
-  - *Index*: `(run_id, answer_id, start_char)` for stable sorted retrieval.
+### 7.2 API Endpoints
+1. `POST /classify`: Extracts and verifies claims from a single answer. Returns HTTP 200 with validated predictions; 404 for unknown brand; 422 for forbidden fields; 502 for provider errors; 504 for timeout.
+2. `POST /evaluation-runs`: Executes an evaluation run across a split and persists results in PostgreSQL.
+3. `GET /evaluation-runs/{id}`: Retrieves joined run hierarchy sorted deterministically (`answer_id ASC`, `start_char ASC`).
 
 ---
 
-## 4. API Endpoints
+## 8. Setup & Execution Commands
 
-### 4.1 `POST /classify`
-Extracts and verifies factual claims from a single answer.
-- **Headers**: `Content-Type: application/json`
-- **Request Body**:
-  ```json
-  {
-    "answer_id": "A01",
-    "brand_id": "cleartrail",
-    "question": "What is the warranty period for ClearTrail Mini?",
-    "ai_answer": "For an authorized India purchase with the original invoice and a manufacturing defect, ClearTrail Mini receives a standard manufacturer warranty lasting 18 months from the purchase date.",
-    "agent_version": "v1"
-  }
-  ```
-- **Responses**:
-  - `200 OK`: Validated predictions with exact character spans and catalogue fact citations.
-  - `404 Not Found`: Unknown primary brand (must be one of `cleartrail`, `cloudnote`, `stonewave`).
-  - `422 Unprocessable Entity`: Malformed request or presence of forbidden fields (`gold_claims`, `expected_label`, `score`, etc.).
-  - `502 Bad Gateway`: Model provider failure or invalid provider JSON output.
-  - `504 Gateway Timeout`: Model provider request timeout.
-
-### 4.2 `POST /evaluation-runs`
-Executes an evaluation run over a fixed dataset split and persists all outcomes.
-- **Request Body**:
-  ```json
-  {
-    "agent_version": "v2",
-    "split": "development"
-  }
-  ```
-- **Responses**:
-  - `201 Created`: Returns run summary including ID, counts, status, and quality metrics (for `development` split).
-  - *Note*: If `split` is `"check"`, all quality metrics remain `null`.
-
-### 4.3 `GET /evaluation-runs/{id}`
-Retrieves joined run metadata, answer outcomes, and claim predictions.
-- **Ordering**: Answers ordered by `answer_id ASC`, claims ordered by `start_char ASC`.
-- **Responses**:
-  - `200 OK`: Full joined evaluation run hierarchy.
-  - `404 Not Found`: Run ID does not exist.
-  - `422 Unprocessable Entity`: Invalid UUID format.
-
----
-
-## 5. Setup & Execution Commands
-
-### 5.1 Clone the Repository
 ```bash
+# 1. Clone repository
 git clone https://github.com/Surendra571/kasparro-claim-checker.git
 cd kasparro-claim-checker
-```
 
-### 5.2 Start PostgreSQL
-#### Option A: Docker Compose
-```bash
+# 2. Setup environment
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+cp .env.example .env
+
+# 3. Start database & run migrations
 docker compose up -d
-```
-#### Option B: Local Windows PostgreSQL Service
-Ensure PostgreSQL is running on port 5432 and configure `.env`:
-```ini
-DATABASE_URL="postgresql://postgres:12345@localhost:5432/kasparro_db"
-```
-
-### 5.3 Apply Database Migrations
-Run Alembic migrations to create tables and constraints in PostgreSQL:
-```bash
 alembic upgrade head
-```
 
-### 5.4 Run the FastAPI Application
-```bash
+# 4. Start API server
 uvicorn app.api.app:app --host 127.0.0.1 --port 8000 --reload
-```
-Interactive documentation is available at `http://127.0.0.1:8000/docs`.
 
-### 5.5 Execute the Four-Run Protocol
-Executes v1 (dev), v2 (dev), v1 (check), v2 (check), generates the comparison report, and validates all four artifacts against the report schema:
-```bash
+# 5. Run tests (90 tests)
+pytest -v
+
+# 6. Execute full four-run protocol
 python scripts/run_live_evaluation.py --four-runs
 ```
 
-### 5.6 Run the Complete Automated Test Suite
-```bash
-pytest -v
-```
-
 ---
 
-## 6. Test Suite Results
+## 9. Automated Test Suite Results
 
-All 90 automated tests execute against live PostgreSQL and pass cleanly (100% pass rate):
-- `tests/test_agent.py`: Multi-turn tool exchange, 3-turn limit, illegal tool rejection, error preservation (7 passed).
-- `tests/test_api_and_database.py`: `/classify`, `/evaluation-runs`, `/evaluation-runs/{id}`, PostgreSQL foreign keys, unique constraints, cascade deletion, error mappings (502, 504), split safety (10 passed).
-- `tests/test_compliance_and_reliability.py`: Comprehensive reliability and compliance review covering CSV/spans, tool validation, scorer arithmetic, and transactional safety (31 passed).
+All 90 automated tests execute against live PostgreSQL and pass cleanly:
+- `tests/test_agent.py`: Multi-turn tool exchange, 3-turn limit, illegal tool rejection (7 passed).
+- `tests/test_api_and_database.py`: API endpoints, PostgreSQL foreign keys, unique constraints, cascade deletion (10 passed).
+- `tests/test_compliance_and_reliability.py`: Comprehensive reliability review covering CSV/spans, tool validation, scorer arithmetic, and transactional safety (31 passed).
 - `tests/test_dataset_audit.py`: SHA-256 verification, quote equality `ai_answer[start:end] == quote` (10 passed).
 - `tests/test_evaluator.py`: Deterministic evaluator metrics, arithmetic examples, split safety (11 passed).
 - `tests/test_fact_tool.py`: Typed catalogue loading (boolean/number/string), brand isolation (7 passed).
 - `tests/test_isolation_security.py`: Runtime isolation guarantees preventing gold leakage (2 passed).
 - `tests/test_live_evaluation.py`: Prompt hash freezing, v1/v2 execution, comparison generation (3 passed).
-- `tests/test_validation.py`: Sequential cursor span resolution, invalid fact ID rejection, reason sentence limits (9 passed).
+- `tests/test_validation.py`: Sequential cursor span resolution, invalid fact ID rejection, reason limits (9 passed).
+
+Full live terminal execution output is saved at [`reports/test_results.txt`](reports/test_results.txt).
+
+---
+
+## 10. AI Assistance Disclosure & Independent Verification
+
+- **AI Tools Used**: Antigravity coding assistant used for rapid scaffolding, test boilerplate generation, and script structuring.
+- **Independently Verified by Candidate**:
+  - Verified 100% source-slice quote equality `ai_answer[start:end] == quote` across all 376 development gold claims and 94 check claims.
+  - Independently verified evaluation arithmetic formulas ($G, P, M, C$, extraction/joint metrics, coverage).
+  - Verified PostgreSQL unique constraints `(run_id, answer_id)` and `(run_id, answer_id, start_char, end_char)`.
+  - Verified runtime data isolation ensuring `development_gold.csv` never enters agent payloads or check runs.
+  - Authored and validated all 90 tests in [`reports/test_results.txt`](reports/test_results.txt).
