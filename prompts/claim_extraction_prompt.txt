@@ -1,0 +1,26 @@
+You are an expert fact-checking parser. Your task is to extract all verifiable factual claims from the provided AI answer text.
+
+INPUT:
+AI Answer:
+"""
+{ai_answer}
+"""
+
+CRITICAL RULES:
+1. Extract atomic factual claims. Each claim must assert a verifiable fact (specifications, dimensions, prices, dates, features, warranty, policies).
+2. For each claim, provide the EXACT `quote`, `start_char` (0-indexed inclusive), and `end_char` (0-indexed exclusive).
+3. The extracted quote MUST strictly satisfy: ai_answer[start_char:end_char] == quote.
+4. Do NOT normalize whitespace or modify punctuation in quotes.
+5. Do NOT produce overlapping claims.
+
+OUTPUT FORMAT:
+Respond with a JSON array of objects:
+[
+  {
+    "claim_id": "{answer_id}:{start_char}:{end_char}",
+    "start_char": 0,
+    "end_char": 45,
+    "quote": "exact substring from ai_answer"
+  }
+]
+

@@ -1,0 +1,567 @@
+{
+  "metadata": {
+    "evaluation_id": "eval-v2-development-20261021-111547",
+    "started_at": "2026-10-21T11:15:47.423077+00:00",
+    "completed_at": "2026-10-21T11:15:47.663322+00:00",
+    "duration_seconds": 0.18,
+    "is_run_complete": true,
+    "stop_reason": null,
+    "provider": "benchmark-simulator",
+    "model": "benchmark-engine-v2",
+    "prompt_version": "v2",
+    "prompt_hash": "54586b58234d66a0682b8ed397159f0bb1e18555160cc2105bc439f2d1c0c89c",
+    "dataset_hashes": {
+      "answers.csv": "fa28e813ea54b4e5ea985585f22f084d826241e1182accbc27ace17066125724",
+      "brand_facts.csv": "2190d40fad2dd167ef2437956c43d595aaf2554ea673a4789b9343cb7e2936f2",
+      "development_gold.csv": "afe84cc78f304afb6a4aaa505dd7504af80fcbf8bc507806aa5ff0aab6bf4850"
+    },
+    "fact_version": "speaker-catalogue-v4",
+    "evaluator_version": "1.0.0",
+    "git_revision": "102640f1cd3a984fcb647f53f4cdc340caa46186",
+    "scheduled_count": 40,
+    "evaluated_count": 40
+  },
+  "evaluation_summary": {
+    "split_name": "development",
+    "is_ground_truth_available": true,
+    "total_scheduled_answers": 40,
+    "successful_answers": 40,
+    "failed_answers": 0,
+    "metrics": {
+      "G": 376,
+      "P": 374,
+      "M": 370,
+      "C": 362,
+      "extraction_precision": 0.9893048128342246,
+      "extraction_recall": 0.9840425531914894,
+      "extraction_f1": 0.9866666666666667,
+      "joint_precision": 0.9679144385026738,
+      "joint_recall": 0.9627659574468085,
+      "joint_f1": 0.9653333333333334,
+      "gold_claim_coverage": 0.9627659574468085,
+      "matched_label_accuracy": 0.9783783783783784
+    },
+    "per_answer_summary": {
+      "A01": {
+        "status": "success",
+        "duration_seconds": 0.004,
+        "predictions_count": 9,
+        "error": null
+      },
+      "A02": {
+        "status": "success",
+        "duration_seconds": 0.005,
+        "predictions_count": 11,
+        "error": null
+      },
+      "A03": {
+        "status": "success",
+        "duration_seconds": 0.006,
+        "predictions_count": 8,
+        "error": null
+      },
+      "A04": {
+        "status": "success",
+        "duration_seconds": 0.006,
+        "predictions_count": 11,
+        "error": null
+      },
+      "A05": {
+        "status": "success",
+        "duration_seconds": 0.003,
+        "predictions_count": 8,
+        "error": null
+      },
+      "A06": {
+        "status": "success",
+        "duration_seconds": 0.002,
+        "predictions_count": 10,
+        "error": null
+      },
+      "A07": {
+        "status": "success",
+        "duration_seconds": 0.003,
+        "predictions_count": 8,
+        "error": null
+      },
+      "A08": {
+        "status": "success",
+        "duration_seconds": 0.004,
+        "predictions_count": 10,
+        "error": null
+      },
+      "A09": {
+        "status": "success",
+        "duration_seconds": 0.005,
+        "predictions_count": 9,
+        "error": null
+      },
+      "A10": {
+        "status": "success",
+        "duration_seconds": 0.007,
+        "predictions_count": 11,
+        "error": null
+      },
+      "A11": {
+        "status": "success",
+        "duration_seconds": 0.005,
+        "predictions_count": 9,
+        "error": null
+      },
+      "A12": {
+        "status": "success",
+        "duration_seconds": 0.005,
+        "predictions_count": 9,
+        "error": null
+      },
+      "A13": {
+        "status": "success",
+        "duration_seconds": 0.006,
+        "predictions_count": 10,
+        "error": null
+      },
+      "A14": {
+        "status": "success",
+        "duration_seconds": 0.004,
+        "predictions_count": 9,
+        "error": null
+      },
+      "A15": {
+        "status": "success",
+        "duration_seconds": 0.003,
+        "predictions_count": 10,
+        "error": null
+      },
+      "A16": {
+        "status": "success",
+        "duration_seconds": 0.002,
+        "predictions_count": 9,
+        "error": null
+      },
+      "A17": {
+        "status": "success",
+        "duration_seconds": 0.003,
+        "predictions_count": 11,
+        "error": null
+      },
+      "A18": {
+        "status": "success",
+        "duration_seconds": 0.003,
+        "predictions_count": 7,
+        "error": null
+      },
+      "A19": {
+        "status": "success",
+        "duration_seconds": 0.002,
+        "predictions_count": 10,
+        "error": null
+      },
+      "A20": {
+        "status": "success",
+        "duration_seconds": 0.004,
+        "predictions_count": 9,
+        "error": null
+      },
+      "A21": {
+        "status": "success",
+        "duration_seconds": 0.005,
+        "predictions_count": 8,
+        "error": null
+      },
+      "A22": {
+        "status": "success",
+        "duration_seconds": 0.003,
+        "predictions_count": 10,
+        "error": null
+      },
+      "A23": {
+        "status": "success",
+        "duration_seconds": 0.006,
+        "predictions_count": 8,
+        "error": null
+      },
+      "A24": {
+        "status": "success",
+        "duration_seconds": 0.004,
+        "predictions_count": 9,
+        "error": null
+      },
+      "A25": {
+        "status": "success",
+        "duration_seconds": 0.004,
+        "predictions_count": 9,
+        "error": null
+      },
+      "A26": {
+        "status": "success",
+        "duration_seconds": 0.006,
+        "predictions_count": 10,
+        "error": null
+      },
+      "A27": {
+        "status": "success",
+        "duration_seconds": 0.006,
+        "predictions_count": 9,
+        "error": null
+      },
+      "A28": {
+        "status": "success",
+        "duration_seconds": 0.007,
+        "predictions_count": 10,
+        "error": null
+      },
+      "A29": {
+        "status": "success",
+        "duration_seconds": 0.006,
+        "predictions_count": 9,
+        "error": null
+      },
+      "A30": {
+        "status": "success",
+        "duration_seconds": 0.004,
+        "predictions_count": 10,
+        "error": null
+      },
+      "A31": {
+        "status": "success",
+        "duration_seconds": 0.004,
+        "predictions_count": 10,
+        "error": null
+      },
+      "A32": {
+        "status": "success",
+        "duration_seconds": 0.003,
+        "predictions_count": 9,
+        "error": null
+      },
+      "A33": {
+        "status": "success",
+        "duration_seconds": 0.005,
+        "predictions_count": 11,
+        "error": null
+      },
+      "A34": {
+        "status": "success",
+        "duration_seconds": 0.003,
+        "predictions_count": 8,
+        "error": null
+      },
+      "A35": {
+        "status": "success",
+        "duration_seconds": 0.004,
+        "predictions_count": 10,
+        "error": null
+      },
+      "A36": {
+        "status": "success",
+        "duration_seconds": 0.005,
+        "predictions_count": 9,
+        "error": null
+      },
+      "A37": {
+        "status": "success",
+        "duration_seconds": 0.005,
+        "predictions_count": 10,
+        "error": null
+      },
+      "A38": {
+        "status": "success",
+        "duration_seconds": 0.003,
+        "predictions_count": 8,
+        "error": null
+      },
+      "A39": {
+        "status": "success",
+        "duration_seconds": 0.003,
+        "predictions_count": 10,
+        "error": null
+      },
+      "A40": {
+        "status": "success",
+        "duration_seconds": 0.003,
+        "predictions_count": 9,
+        "error": null
+      }
+    },
+    "answer_errors": [],
+    "rejected_claims": [],
+    "missed_gold_claim_ids": [
+      "A03:1918:2069",
+      "A11:2092:2264",
+      "A18:1875:2044",
+      "A24:2215:2381",
+      "A30:2419:2572",
+      "A38:1978:2164"
+    ],
+    "unmatched_prediction_ids": [
+      "A02:0:131",
+      "A10:0:110",
+      "A20:0:78",
+      "A36:0:92"
+    ],
+    "label_mismatches": [
+      {
+        "answer_id": "A04",
+        "claim_id": "A04:2363:2540",
+        "start_char": 2363,
+        "end_char": 2540,
+        "quote": "In the 2025 India catalogue, before the current-year revision, StoneWave Max already carried the same tax-inclusive list price of INR 3,499, excluding shipping from that amount.",
+        "gold_label": "contradicted",
+        "predicted_label": "unknown",
+        "predicted_fact_ids": [],
+        "gold_evidence_fact_ids": [
+          "stonewave.max.price_2025"
+        ]
+      },
+      {
+        "answer_id": "A06",
+        "claim_id": "A06:495:697",
+        "start_char": 495,
+        "end_char": 697,
+        "quote": "No version of ClearTrail Plus has ever been offered in blue, including previous-year retail stock and editions supplied only through independent authorized sellers rather than the official online store.",
+        "gold_label": "unknown",
+        "predicted_label": "supported",
+        "predicted_fact_ids": [
+          "cleartrail.plus.cable_included"
+        ],
+        "gold_evidence_fact_ids": []
+      },
+      {
+        "answer_id": "A07",
+        "claim_id": "A07:306:511",
+        "start_char": 306,
+        "end_char": 511,
+        "quote": "A retail purchase of ClearTrail Plus in Germany qualifies for the same 12-month manufacturer warranty described for authorized India purchases, without any different regional terms affecting that duration.",
+        "gold_label": "unknown",
+        "predicted_label": "supported",
+        "predicted_fact_ids": [
+          "cleartrail.plus.warranty_india"
+        ],
+        "gold_evidence_fact_ids": [
+          "cleartrail.plus.warranty_india"
+        ]
+      },
+      {
+        "answer_id": "A12",
+        "claim_id": "A12:335:515",
+        "start_char": 335,
+        "end_char": 515,
+        "quote": "The official India catalogue price of StoneWave Go will drop by INR 300 during January 2027, with that future reduction applying before shipping to purchases from the brand itself.",
+        "gold_label": "unknown",
+        "predicted_label": "supported",
+        "predicted_fact_ids": [
+          "cloudnote.studio.warranty_india"
+        ],
+        "gold_evidence_fact_ids": [
+          "stonewave.go.price_2026"
+        ]
+      },
+      {
+        "answer_id": "A19",
+        "claim_id": "A19:371:555",
+        "start_char": 371,
+        "end_char": 555,
+        "quote": "For an authorized India purchase with the original invoice and a manufacturing defect, StoneWave Max receives a standard manufacturer warranty lasting 24 months from the purchase date.",
+        "gold_label": "contradicted",
+        "predicted_label": "supported",
+        "predicted_fact_ids": [
+          "stonewave.max.warranty_india"
+        ],
+        "gold_evidence_fact_ids": [
+          "stonewave.max.warranty_india"
+        ]
+      },
+      {
+        "answer_id": "A25",
+        "claim_id": "A25:306:459",
+        "start_char": 306,
+        "end_char": 459,
+        "quote": "For the current India catalogue, CloudNote Air is listed at INR 1,500 less than CloudNote Studio, comparing the two tax-inclusive prices before shipping.",
+        "gold_label": "supported",
+        "predicted_label": "unknown",
+        "predicted_fact_ids": [],
+        "gold_evidence_fact_ids": [
+          "cloudnote.air.price_2026",
+          "cloudnote.studio.price_2026"
+        ]
+      },
+      {
+        "answer_id": "A31",
+        "claim_id": "A31:324:477",
+        "start_char": 324,
+        "end_char": 477,
+        "quote": "For the current India catalogue, CloudNote Studio is listed at INR 1,500 more than CloudNote Air, comparing the two tax-inclusive prices before shipping.",
+        "gold_label": "supported",
+        "predicted_label": "contradicted",
+        "predicted_fact_ids": [
+          "stonewave.go.price_2026",
+          "cleartrail.plus.price_2026"
+        ],
+        "gold_evidence_fact_ids": [
+          "cloudnote.studio.price_2026",
+          "cloudnote.air.price_2026"
+        ]
+      },
+      {
+        "answer_id": "A35",
+        "claim_id": "A35:335:520",
+        "start_char": 335,
+        "end_char": 520,
+        "quote": "With all port covers closed, ClearTrail Plus is permitted to remain immersed in fresh water at a depth of one metre for a full hour under the manufacturer's stated laboratory allowance.",
+        "gold_label": "contradicted",
+        "predicted_label": "supported",
+        "predicted_fact_ids": [
+          "stonewave.max.weight"
+        ],
+        "gold_evidence_fact_ids": [
+          "cleartrail.plus.immersion_duration",
+          "cleartrail.plus.immersion_allowed",
+          "cleartrail.plus.immersion_depth"
+        ]
+      }
+    ],
+    "label_confusion": {
+      "gold_counts": {
+        "supported": 120,
+        "contradicted": 120,
+        "unknown": 136
+      },
+      "prediction_counts": {
+        "supported": 120,
+        "contradicted": 115,
+        "unknown": 139
+      },
+      "confusion_matrix": {
+        "supported": {
+          "supported": 115,
+          "unknown": 1,
+          "contradicted": 1
+        },
+        "contradicted": {
+          "contradicted": 114,
+          "unknown": 1,
+          "supported": 2
+        },
+        "unknown": {
+          "unknown": 133,
+          "supported": 3
+        }
+      }
+    }
+  },
+  "error_analysis_breakdown": {
+    "missed_claims_count": 6,
+    "extra_claims_count": 4,
+    "wrong_labels_count": 8,
+    "answer_errors_count": 0,
+    "difficulty_tag_breakdown": {
+      "outdated_fact": 1,
+      "model_scope": 2,
+      "explicit_false": 2,
+      "negation": 1,
+      "scope": 1,
+      "comparison": 1,
+      "arithmetic": 1,
+      "qualification": 1,
+      "unit_conversion": 1
+    }
+  },
+  "sanitized_exchanges": [
+    {
+      "answer_id": "A01",
+      "brand_id": "cleartrail",
+      "claims_count": 9,
+      "claims_sample": [
+        {
+          "answer_id": "A01",
+          "claim_id": "A01:306:460",
+          "start_char": 306,
+          "end_char": 460,
+          "quote": "For the current India catalogue, ClearTrail Mini is listed at INR 1,200 less than ClearTrail Plus, comparing the two tax-inclusive prices before shipping.",
+          "label": "supported",
+          "fact_ids": [
+            "cleartrail.mini.price_2026",
+            "cleartrail.plus.price_2026"
+          ],
+          "reason": "The two 2026 list prices are 1299 and 2499; the stated direction and difference are correct.",
+          "is_valid_slice": true
+        },
+        {
+          "answer_id": "A01",
+          "claim_id": "A01:461:647",
+          "start_char": 461,
+          "end_char": 647,
+          "quote": "For an authorized India purchase with the original invoice and a manufacturing defect, ClearTrail Mini receives a standard manufacturer warranty lasting 18 months from the purchase date.",
+          "label": "contradicted",
+          "fact_ids": [
+            "cleartrail.mini.warranty_india"
+          ],
+          "reason": "The matching India warranty is 12 months, not 18.",
+          "is_valid_slice": true
+        }
+      ]
+    },
+    {
+      "answer_id": "A02",
+      "brand_id": "cloudnote",
+      "claims_count": 11,
+      "claims_sample": [
+        {
+          "answer_id": "A02",
+          "claim_id": "A02:0:131",
+          "start_char": 0,
+          "end_char": 131,
+          "quote": "For a desk setup, begin by deciding whether you care most about a wired source, a wireless source or a simple charging arrangement.",
+          "label": "unknown",
+          "fact_ids": [],
+          "reason": "General setup advice not verifiable in the brand catalogue.",
+          "is_valid_slice": true
+        },
+        {
+          "answer_id": "A02",
+          "claim_id": "A02:306:506",
+          "start_char": 306,
+          "end_char": 506,
+          "quote": "Whatever conclusions a buyer draws from the water-resistance rating, water damage remains excluded from the standard India manufacturer warranty covering CloudNote Studio after an authorized purchase.",
+          "label": "supported",
+          "fact_ids": [
+            "cloudnote.studio.water_damage_covered"
+          ],
+          "reason": "Water damage coverage is explicitly false, independently of the rating.",
+          "is_valid_slice": true
+        }
+      ]
+    },
+    {
+      "answer_id": "A03",
+      "brand_id": "cloudnote",
+      "claims_count": 8,
+      "claims_sample": [
+        {
+          "answer_id": "A03",
+          "claim_id": "A03:335:505",
+          "start_char": 335,
+          "end_char": 505,
+          "quote": "Orders for CloudNote Air receive free delivery to every India postal code, so there is no separate shipping charge even when a customer selects a remote delivery address.",
+          "label": "unknown",
+          "fact_ids": [
+            "cloudnote.air.price_2026"
+          ],
+          "reason": "The list price excludes shipping; no universal free-delivery policy is supplied.",
+          "is_valid_slice": true
+        },
+        {
+          "answer_id": "A03",
+          "claim_id": "A03:506:687",
+          "start_char": 506,
+          "end_char": 687,
+          "quote": "An opened CloudNote Air can be returned to any authorized India seller within thirty days for a full refund, even when the speaker has no manufacturing defect or functional problem.",
+          "label": "unknown",
+          "fact_ids": [],
+          "reason": "No retailer return or refund policy is supplied.",
+          "is_valid_slice": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,214 @@
+{
+  "metadata": {
+    "evaluation_id": "eval-v2-check-20261021-111548",
+    "started_at": "2026-10-21T11:15:47.970637+00:00",
+    "completed_at": "2026-10-21T11:15:48.010530+00:00",
+    "duration_seconds": 0.03,
+    "is_run_complete": true,
+    "stop_reason": null,
+    "provider": "benchmark-simulator",
+    "model": "benchmark-engine-v2",
+    "prompt_version": "v2",
+    "prompt_hash": "54586b58234d66a0682b8ed397159f0bb1e18555160cc2105bc439f2d1c0c89c",
+    "dataset_hashes": {
+      "answers.csv": "fa28e813ea54b4e5ea985585f22f084d826241e1182accbc27ace17066125724",
+      "brand_facts.csv": "2190d40fad2dd167ef2437956c43d595aaf2554ea673a4789b9343cb7e2936f2",
+      "development_gold.csv": "none (excluded from check split)"
+    },
+    "fact_version": "speaker-catalogue-v4",
+    "evaluator_version": "1.0.0",
+    "git_revision": "102640f1cd3a984fcb647f53f4cdc340caa46186",
+    "scheduled_count": 10,
+    "evaluated_count": 10
+  },
+  "evaluation_summary": {
+    "split_name": "check",
+    "is_ground_truth_available": false,
+    "total_scheduled_answers": 10,
+    "successful_answers": 10,
+    "failed_answers": 0,
+    "metrics": {
+      "G": null,
+      "P": 94,
+      "M": null,
+      "C": null,
+      "extraction_precision": null,
+      "extraction_recall": null,
+      "extraction_f1": null,
+      "joint_precision": null,
+      "joint_recall": null,
+      "joint_f1": null,
+      "gold_claim_coverage": null,
+      "matched_label_accuracy": null
+    },
+    "per_answer_summary": {
+      "A41": {
+        "status": "success",
+        "duration_seconds": 0.002,
+        "predictions_count": 9,
+        "error": null
+      },
+      "A42": {
+        "status": "success",
+        "duration_seconds": 0.002,
+        "predictions_count": 10,
+        "error": null
+      },
+      "A43": {
+        "status": "success",
+        "duration_seconds": 0.002,
+        "predictions_count": 9,
+        "error": null
+      },
+      "A44": {
+        "status": "success",
+        "duration_seconds": 0.003,
+        "predictions_count": 10,
+        "error": null
+      },
+      "A45": {
+        "status": "success",
+        "duration_seconds": 0.002,
+        "predictions_count": 9,
+        "error": null
+      },
+      "A46": {
+        "status": "success",
+        "duration_seconds": 0.002,
+        "predictions_count": 11,
+        "error": null
+      },
+      "A47": {
+        "status": "success",
+        "duration_seconds": 0.003,
+        "predictions_count": 8,
+        "error": null
+      },
+      "A48": {
+        "status": "success",
+        "duration_seconds": 0.004,
+        "predictions_count": 10,
+        "error": null
+      },
+      "A49": {
+        "status": "success",
+        "duration_seconds": 0.004,
+        "predictions_count": 8,
+        "error": null
+      },
+      "A50": {
+        "status": "success",
+        "duration_seconds": 0.002,
+        "predictions_count": 10,
+        "error": null
+      }
+    },
+    "answer_errors": [],
+    "rejected_claims": [],
+    "missed_gold_claim_ids": null,
+    "unmatched_prediction_ids": null,
+    "label_mismatches": null,
+    "label_confusion": null
+  },
+  "error_analysis_breakdown": {
+    "answer_errors_count": 0,
+    "accepted_predictions_count": 94,
+    "ground_truth_metrics": "omitted_for_check_split"
+  },
+  "sanitized_exchanges": [
+    {
+      "answer_id": "A41",
+      "brand_id": "stonewave",
+      "claims_count": 9,
+      "claims_sample": [
+        {
+          "answer_id": "A41",
+          "claim_id": "A41:371:551",
+          "start_char": 371,
+          "end_char": 551,
+          "quote": "An opened StoneWave Go can be returned to any authorized India seller within thirty days for a full refund, even when the speaker has no manufacturing defect or functional problem.",
+          "label": "unknown",
+          "fact_ids": [],
+          "reason": "Specification or condition not found in official brand catalogue.",
+          "is_valid_slice": true
+        },
+        {
+          "answer_id": "A41",
+          "claim_id": "A41:552:732",
+          "start_char": 552,
+          "end_char": 732,
+          "quote": "The official India catalogue price of StoneWave Go will drop by INR 300 during January 2027, with that future reduction applying before shipping to purchases from the brand itself.",
+          "label": "unknown",
+          "fact_ids": [],
+          "reason": "Specification or condition not found in official brand catalogue.",
+          "is_valid_slice": true
+        }
+      ]
+    },
+    {
+      "answer_id": "A42",
+      "brand_id": "cleartrail",
+      "claims_count": 10,
+      "claims_sample": [
+        {
+          "answer_id": "A42",
+          "claim_id": "A42:306:489",
+          "start_char": 306,
+          "end_char": 489,
+          "quote": "An opened ClearTrail Plus can be returned to any authorized India seller within thirty days for a full refund, even when the speaker has no manufacturing defect or functional problem.",
+          "label": "unknown",
+          "fact_ids": [],
+          "reason": "Specification or condition not found in official brand catalogue.",
+          "is_valid_slice": true
+        },
+        {
+          "answer_id": "A42",
+          "claim_id": "A42:490:689",
+          "start_char": 490,
+          "end_char": 689,
+          "quote": "Whatever conclusions a buyer draws from the water-resistance rating, water damage remains excluded from the standard India manufacturer warranty covering ClearTrail Plus after an authorized purchase.",
+          "label": "supported",
+          "fact_ids": [
+            "cleartrail.plus.water_damage_covered"
+          ],
+          "reason": "Catalogue confirms water damage is not covered under the manufacturer warranty.",
+          "is_valid_slice": true
+        }
+      ]
+    },
+    {
+      "answer_id": "A43",
+      "brand_id": "cleartrail",
+      "claims_count": 9,
+      "claims_sample": [
+        {
+          "answer_id": "A43",
+          "claim_id": "A43:306:484",
+          "start_char": 306,
+          "end_char": 484,
+          "quote": "When measuring just the speaker rather than the retail box and accessories, ClearTrail Plus weighs 320 grams, matching the carrying-weight figure associated with ClearTrail Mini.",
+          "label": "contradicted",
+          "fact_ids": [
+            "cleartrail.plus.weight",
+            "cleartrail.mini.weight"
+          ],
+          "reason": "ClearTrail Plus weighs 580 grams; 320 grams is the weight of ClearTrail Mini.",
+          "is_valid_slice": true
+        },
+        {
+          "answer_id": "A43",
+          "claim_id": "A43:485:644",
+          "start_char": 485,
+          "end_char": 644,
+          "quote": "The built-in Wi-Fi capability of ClearTrail Plus is present, independently of whatever Bluetooth connection a listener might also choose for everyday playback.",
+          "label": "contradicted",
+          "fact_ids": [
+            "cleartrail.plus.wifi"
+          ],
+          "reason": "Catalogue states Wi-Fi hardware is absent on ClearTrail Plus.",
+          "is_valid_slice": true
+        }
+      ]
+    }
+  ]
+}

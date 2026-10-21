@@ -1,0 +1,130 @@
+{
+  "manifest_version": "1.0.0",
+  "dataset_name": "KASPARRO FSE Intern Pathway Assessment Dataset",
+  "generated_at": "2026-10-21T14:20:00Z",
+  "files": {
+    "answers": {
+      "path": "data/answers.csv",
+      "sha256": "fa28e813ea54b4e5ea985585f22f084d826241e1182accbc27ace17066125724",
+      "size_bytes": 139330,
+      "row_count": 50,
+      "columns": [
+        "answer_id",
+        "split",
+        "brand_id",
+        "question",
+        "ai_answer"
+      ],
+      "split_distribution": {
+        "development": 40,
+        "check": 10
+      },
+      "answer_id_ranges": {
+        "development": {
+          "start": "A01",
+          "end": "A40",
+          "count": 40
+        },
+        "check": {
+          "start": "A41",
+          "end": "A50",
+          "count": 10
+        }
+      },
+      "brands": [
+        "cleartrail",
+        "cloudnote",
+        "stonewave"
+      ]
+    },
+    "brand_facts": {
+      "path": "data/brand_facts.csv",
+      "sha256": "2190d40fad2dd167ef2437956c43d595aaf2554ea673a4789b9343cb7e2936f2",
+      "size_bytes": 19278,
+      "row_count": 132,
+      "columns": [
+        "fact_id",
+        "brand_id",
+        "model_id",
+        "field",
+        "value",
+        "value_type",
+        "unit",
+        "condition",
+        "valid_from",
+        "valid_to"
+      ],
+      "brands": [
+        "cleartrail",
+        "cloudnote",
+        "stonewave"
+      ],
+      "models_by_brand": {
+        "cleartrail": [
+          "mini",
+          "plus"
+        ],
+        "cloudnote": [
+          "air",
+          "studio"
+        ],
+        "stonewave": [
+          "go",
+          "max"
+        ]
+      },
+      "value_types": {
+        "boolean": 60,
+        "number": 42,
+        "string": 30
+      },
+      "temporal_coverage": {
+        "valid_from": [
+          "2025-01-01",
+          "2026-01-01"
+        ],
+        "valid_to": [
+          "2025-12-31",
+          "2026-12-31"
+        ]
+      }
+    },
+    "development_gold": {
+      "path": "data/development_gold.csv",
+      "sha256": "afe84cc78f304afb6a4aaa505dd7504af80fcbf8bc507806aa5ff0aab6bf4850",
+      "size_bytes": 128276,
+      "row_count": 376,
+      "columns": [
+        "answer_id",
+        "claim_id",
+        "start_char",
+        "end_char",
+        "quote",
+        "expected_label",
+        "evidence_fact_ids",
+        "explanation",
+        "difficulty_tags"
+      ],
+      "label_distribution": {
+        "supported": 120,
+        "contradicted": 120,
+        "unknown": 136
+      },
+      "quote_validation": {
+        "total_claims": 376,
+        "exact_matches": 376,
+        "mismatches": 0,
+        "match_rate": 1.0
+      },
+      "claim_id_format": "{answer_id}:{start_char}:{end_char}",
+      "evidence_facts": {
+        "delimiter": "|",
+        "claims_with_evidence": 332,
+        "unique_referenced_facts": 107,
+        "missing_fact_references": 0
+      },
+      "isolation_policy": "STRICT_RESTRICTED: Never expose to inference agents, fact retrieval services, or runtime tools"
+    }
+  }
+}
+
